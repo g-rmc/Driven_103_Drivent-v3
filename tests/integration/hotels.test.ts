@@ -6,7 +6,7 @@ import faker from "@faker-js/faker";
 import app, { init } from "@/app";
 import { prisma } from "@/config";
 import { cleanDb, generateValidToken } from "../helpers";
-import { createUser } from "../factories";
+import { createUser, createHotel } from "../factories";
 
 beforeAll(async () => {
   await init();
@@ -15,7 +15,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await cleanDb();
 });
-  
+
 const server = supertest(app);
 
 describe("GET /hotels", () => {
@@ -45,32 +45,32 @@ describe("GET /hotels", () => {
   describe("when token is valid", () => {
     it("should respond with status 403 if user doesnt have a ticket", async () => {
       const response = await server.get("/hotels");
-
+      //////////////////
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it("should respond with status 403 if ticket doesnt have hotel included", async () => {
       const response = await server.get("/hotels");
-  
+      //////////////////  
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it("should respond with status 402 if ticket with hotel not payed", async () => {
       const response = await server.get("/hotels");
-    
+      //////////////////    
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
 
     describe("when ticket is valid", () => {
       it("should respond with status 200 and empty array if no hotel created", async () => {
         const response = await server.get("/hotels");
-    
+        //////////////////    
         expect(response.status).toBe(httpStatus.OK);
       });
 
       it("should respond with status 200 and hotels list", async () => {
         const response = await server.get("/hotels");
-    
+        //////////////////    
         expect(response.status).toBe(httpStatus.OK);
       });
     });
@@ -104,38 +104,38 @@ describe("GET /hotels/:hotelId", () => {
   describe("when token is valid", () => {
     it("should respond with status 403 if user doesnt have a ticket", async () => {
       const response = await server.get("/hotels/1");
-
+      //////////////////
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it("should respond with status 403 if ticket doesnt have hotel included", async () => {
       const response = await server.get("/hotels/1");
-  
+      //////////////////  
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it("should respond with status 402 if ticket with hotel not payed", async () => {
       const response = await server.get("/hotels/1");
-    
+      //////////////////    
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
 
     describe("when ticket is valid", () => {
       it("should respond with status 400 if invalid hotel id", async () => {
         const response = await server.get("/hotels/1");
-    
+        //////////////////    
         expect(response.status).toBe(httpStatus.BAD_REQUEST);
       });
 
       it("should respond with status 404 if hotel doesnt exists", async () => {
         const response = await server.get("/hotels/1");
-    
+        //////////////////    
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
 
       it("should respond with status 200 and hotel object with rooms", async () => {
         const response = await server.get("/hotels/1");
-    
+        //////////////////    
         expect(response.status).toBe(httpStatus.OK);
       });
     });
