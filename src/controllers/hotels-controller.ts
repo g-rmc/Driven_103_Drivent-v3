@@ -25,9 +25,29 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getHotelById(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const hotelId = Number(req.params.hotelId);
+  
   try {
-    return res.sendStatus(httpStatus.OK);
+    const hotel = await hotelService.getHotelById(userId, hotelId);
+    if(isNaN(hotelId)) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+
+    return res.status(httpStatus.OK).send(hotel);
   } catch (error) {
-    return res.sendStatus(httpStatus.BAD_REQUEST);
+    if(
+      error.message === "enrollment not found" ||
+        error.message === "ticket not found" ||
+        error.message === "ticket doesnt have hotel"
+    ) {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    }
+    if(error.message === "ticket not payed") {
+      return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    }
+    if(error.message === "No result for this search!") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
   }
 }

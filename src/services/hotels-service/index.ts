@@ -32,14 +32,12 @@ async function validateTicket(userId: number) {
 }
 
 async function getHotels(userId: number) {
-  const hotels = await hotelRepository.findHotels();
-
   const validTicket = await validateTicket(userId);
-
   if(!validTicket.valid) {
     throw validTicket.error;
   }
   
+  const hotels = await hotelRepository.findHotels();
   if (!hotels) {
     throw notFoundError();
   }
@@ -47,8 +45,22 @@ async function getHotels(userId: number) {
   return hotels;
 }
 
+async function getHotelById(userId: number, hotelId: number) {
+  const validTicket = await validateTicket(userId);
+  if(!validTicket.valid) {
+    throw validTicket.error;
+  }
+
+  const hotel = await hotelRepository.findHotelById(hotelId);
+  if(!hotel) {
+    throw notFoundError();
+  }
+  return hotel;
+}
+
 const hotelService = {
-  getHotels
+  getHotels,
+  getHotelById
 };
   
 export default hotelService;

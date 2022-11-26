@@ -213,7 +213,11 @@ describe("GET /hotels/:hotelId", () => {
           ...hotel,
           createdAt: hotel.createdAt.toISOString(),
           updatedAt: hotel.updatedAt.toISOString(),
-          rooms,
+          Rooms: rooms.map(room => ({
+            ...room,
+            createdAt: room.createdAt.toISOString(),
+            updatedAt: room.updatedAt.toISOString(),
+          })),
         });
       });
     });
